@@ -15,6 +15,11 @@ app.get('/', function(req, res) {
   res.render('index')
 })
 
+app.get('/create', function(req, res) {
+  const randomCode = Math.random().toString(36).substring(2, 7);
+  res.redirect('/game?' + randomCode)
+})
+
 io.on('connect', function() {
   console.log('Hello world from socket.io')
 })
