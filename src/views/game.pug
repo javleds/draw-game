@@ -23,7 +23,13 @@ div#game
         .form-group
             button(type="submit") Enviar
 
-    canvas#draw
+    div#draw
+        p#wordToDraw
+        canvas#drawing
+        button#finishDrawing Terminé
+
+    div#results
+        h1 Resultados de la ronda
 
 input#codeInput(type="hidden" value=code)
 input#nikInput(type="hidden" value=nik)

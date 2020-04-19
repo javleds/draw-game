@@ -2,13 +2,9 @@
 
   const gameStatus = {
     inLobby: 'inLobby',
-    started: 'started',
+    drawing: 'drawing',
+    writing: 'writing',
     finished: 'finished',
-  }
-
-  const gameActions = {
-    draw: 'draw',
-    write: 'write',
   }
 
   const game = {
@@ -48,11 +44,14 @@
         case gameStatus.inLobby:
           activeChildrenIndex = 0
           break;
-        case gameStatus.started:
+        case gameStatus.drawing:
           activeChildrenIndex = 1
           break;
-        case gameStatus.finished:
+        case gameStatus.writing:
           activeChildrenIndex = 2
+          break;
+        case gameStatus.finished:
+          activeChildrenIndex = 3
           break;
       }
 
