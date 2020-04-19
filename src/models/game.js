@@ -25,12 +25,20 @@ class Game {
     this.parties[code].players[ip] = new Player(ip, nik)
   }
 
-  playersFor(code) {
+  getTotalPlayersFor(code) {
     if (!this.parties.hasOwnProperty(code)) {
      return 0;
     }
 
     return Object.keys(this.parties[code].players).length
+  }
+
+  getPlayersFor(code) {
+    if (!this.parties.hasOwnProperty(code)) {
+      return {};
+    }
+
+    return this.parties[code].players
   }
 }
 

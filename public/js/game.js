@@ -2,7 +2,8 @@
   const game = {
     socket: null,
     serverUrl: 'http://localhost:3000',
-    players: 1,
+    totalPlayers: 1,
+    players: {},
     code: '',
     ip: '',
     nik: '',
@@ -10,14 +11,21 @@
 
     render: function() {
       const $loader = document.getElementById('loader')
+      const $totalPlayers = document.getElementById('totalPlayers')
       const $players = document.getElementById('players')
       const $code = document.getElementById('code')
 
-      if ($loader) {
+      if ($loader && this.connected === 1) {
         $loader.remove()
       }
 
-      $players.innerHTML = this.players
+      const playerNames = []
+      for (let i in this.players) {
+        playerNames.push(this.players[i].nik)
+      }
+
+      $players.innerHTML = '&nbsp;(' + playerNames.join(', ') + ')'
+      $totalPlayers.innerHTML = this.totalPlayers
       $code.innerHTML = this.code
     },
 
@@ -51,6 +59,7 @@
 
     onAddPlayer: function(data) {
       this.connected = 1
+      this.totalPlayers = data.totalPlayers
       this.players = data.players
       this.render()
     },

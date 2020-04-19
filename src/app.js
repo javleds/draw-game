@@ -59,11 +59,12 @@ app.get('/game', function(req, res) {
   })
 })
 
-io.on('connection', (socket) => {
+io.on('connection', function (socket) {
   socket.on('join', function(data) {
     game.addPlayer(data.code, data.ip, data.nik)
     const emitData = {
-      players: game.playersFor(data.code)
+      players: game.getPlayersFor(data.code),
+      totalPlayers: game.getTotalPlayersFor(data.code)
     }
     socket.emit('joinConfirmation', emitData)
     socket.broadcast.emit('addPlayer', emitData)
