@@ -4,9 +4,12 @@ const socketIo = require('socket.io')
 const path = require('path')
 const bodyParser = require('body-parser')
 
+const Game = require('./models/game')
+
 const app = express()
 const server = http.Server(app)
 const io = socketIo(server)
+let game = null
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,10 +48,16 @@ app.get('/game', function(req, res) {
   })
 })
 
-io.on('connect', function() {
-  console.log('Hello world from socket.io')
+io.on('connection', (socket) => {
+  socket.on('join', function(data) {
+    game.addPlayer(data.code, data.ip)
+    socket.emit('joinConfirm', {
+      players: game.playersFor(data.code)
+    })
+  })
 })
 
 server.listen(3000, function() {
+  game = new Game();
   console.log('Example app listening on port 3000')
 })
