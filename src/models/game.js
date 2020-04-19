@@ -7,9 +7,10 @@ class Game {
   }
 
   clean () {
+    const vm = this
     const parties = {}
-    Object.keys(this.parties).forEach((party) => {
-      if (party.players.length > 0) {
+    Object.keys(vm.parties).forEach((party) => {
+      if (vm.playersFor(party.code) > 0) {
         parties[party.code] = party
       }
     })

@@ -5,6 +5,7 @@
     players: 1,
     code: '',
     ip: '',
+    connected: 0,
 
     render: function() {
       const $loader = document.getElementById('loader')
@@ -26,9 +27,9 @@
         .then(function(response) {
           response.json()
             .then(function(data) {
-              vm.ip = data.ip
+              // TODO: Delete (+ new Date().getTime()) before deploy
+              vm.ip = data.ip + new Date().getTime()
               vm.joinParty()
-              console.log('joining')
             })
             .catch(function(error) {
               console.log('Failed to convert ipRequest into JSON', error)
@@ -46,8 +47,10 @@
       })
     },
 
-    onJoinConfirm: function(data) {
-      this.players = data.players.length
+    onAddPlayer: function(data) {
+      this.connected = 1
+      this.players = data.players
+      this.render()
     },
 
     init: function() {
@@ -55,7 +58,8 @@
       this.render()
 
       this.socket = io.connect(this.serverUrl)
-      this.socket.on('joinConfirm', this.onJoinConfirm)
+      this.socket.on('joinConfirmation', this.onAddPlayer.bind(this))
+      this.socket.on('addPlayer', this.onAddPlayer.bind(this))
 
       this.getIp()
     }
@@ -63,6 +67,6 @@
 
   game.init();
 
-  // TODO: Deletenext after debug
+  // TODO: Delete next line before deploy
   window.game = game
 })();

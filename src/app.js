@@ -51,9 +51,11 @@ app.get('/game', function(req, res) {
 io.on('connection', (socket) => {
   socket.on('join', function(data) {
     game.addPlayer(data.code, data.ip)
-    socket.emit('joinConfirm', {
+    const emitData = {
       players: game.playersFor(data.code)
-    })
+    }
+    socket.emit('joinConfirmation', emitData)
+    socket.broadcast.emit('addPlayer', emitData)
   })
 })
 
