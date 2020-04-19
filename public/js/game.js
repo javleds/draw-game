@@ -1,4 +1,16 @@
 (function() {
+
+  const gameStatus = {
+    inLobby: 'inLobby',
+    started: 'started',
+    finished: 'finished',
+  }
+
+  const gameActions = {
+    draw: 'draw',
+    write: 'write',
+  }
+
   const game = {
     socket: null,
     serverUrl: 'http://localhost:3000',
@@ -7,15 +19,17 @@
     code: '',
     ip: '',
     nik: '',
-    connected: 0,
+    connected: false,
+    status: gameStatus.inLobby,
 
     render: function() {
       const $loader = document.getElementById('loader')
       const $totalPlayers = document.getElementById('totalPlayers')
       const $players = document.getElementById('players')
       const $code = document.getElementById('code')
+      const $game = document.getElementById('game')
 
-      if ($loader && this.connected === 1) {
+      if ($loader && this.connected) {
         $loader.remove()
       }
 
@@ -27,6 +41,29 @@
       $players.innerHTML = '&nbsp;(' + playerNames.join(', ') + ')'
       $totalPlayers.innerHTML = this.totalPlayers
       $code.innerHTML = this.code
+
+      this._hideAllGameChildren($game)
+      let activeChildrenIndex = 0
+      switch (this.status) {
+        case gameStatus.inLobby:
+          activeChildrenIndex = 0
+          break;
+        case gameStatus.started:
+          activeChildrenIndex = 1
+          break;
+        case gameStatus.finished:
+          activeChildrenIndex = 2
+          break;
+      }
+
+      $game.children[activeChildrenIndex].classList = 'active'
+    },
+
+    _hideAllGameChildren: function($game) {
+      for (let i = 0; i < $game.children.length; i++) {
+        const child = $game.children[i]
+        child.classList = ''
+      }
     },
 
     getIp: function() {
