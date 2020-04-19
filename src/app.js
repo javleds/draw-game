@@ -23,14 +23,22 @@ app.get('/game', gameController.show)
 
 io.on('connection', function (socket) {
   socket.on('join', function(data) {
-    gameController.game.addPlayer(data.code, data.ip, data.nik)
-    const emitData = {
-      players: gameController.game.getPlayersFor(data.code),
-      totalPlayers: gameController.game.getTotalPlayersFor(data.code)
-    }
-    socket.emit('joinConfirmation', emitData)
-    socket.broadcast.emit('addPlayer', emitData)
-    console.log('game', gameController.game)
+    socket.join(data.code, function () {
+      gameController.game.addPlayer(data.code, data.ip, data.nik)
+      const emitData = {
+        players: gameController.game.getPlayersFor(data.code),
+        totalPlayers: gameController.game.getTotalPlayersFor(data.code)
+      }
+      io.to(data.code).emit('joinConfirmation', emitData)
+      socket.broadcast.to(data.code).emit('addPlayer', emitData)
+      console.log('game', gameController.game)
+    })
+  })
+
+  socket.on('disconnect', function() {
+    // TODO: Fix next method
+    // gameController.game.clean()
+    // TODO: Leave channel if it is not exists anymore
   })
 })
 

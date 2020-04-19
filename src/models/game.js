@@ -9,11 +9,14 @@ class Game {
   clean () {
     const vm = this
     const parties = {}
-    Object.keys(vm.parties).forEach((party) => {
-      if (vm.playersFor(party.code) > 0) {
+
+    for (let i in vm.parties) {
+      const party = vm.parties[i]
+      if (this.getTotalPlayersFor(party.code) > 0) {
         parties[party.code] = party
       }
-    })
+    }
+
     this.parties = parties
   }
 
