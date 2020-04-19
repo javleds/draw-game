@@ -4,6 +4,7 @@ const socketIo = require('socket.io')
 const path = require('path')
 const bodyParser = require('body-parser')
 
+const homeController = require('./controllers/home-controller')
 const gameController = require('./controllers/game-controller')
 
 const app = express()
@@ -16,18 +17,8 @@ app.use(express.static('public'));
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'pug')
 
-app.get('/', function(req, res) {
-  const error = req.query.error
-  const code = req.query.code
-
-  res.render('index', {
-    error: error,
-    code: code,
-  })
-})
-
+app.get('/', homeController.index)
 app.get('/create', gameController.create)
-
 app.get('/game', gameController.show)
 
 io.on('connection', function (socket) {
