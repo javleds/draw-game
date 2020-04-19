@@ -6,10 +6,10 @@ head
     title Diviertete
 h1 Bienvenido!
 p Si tienes el código de una partida ingresalo aqui:
-form(href="/game")
+form(action="/game")
     .form-group
-        label(for="partyCode") Código:
-        input(type=text id="partyCode" name="party_code")
+        label(for="code") Código:
+        input(type=text id="code" name="code")
 
     .form-group
         button(type="submit") Entrar
