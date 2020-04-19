@@ -5,6 +5,7 @@
     players: 1,
     code: '',
     ip: '',
+    nik: '',
     connected: 0,
 
     render: function() {
@@ -44,6 +45,7 @@
       this.socket.emit('join', {
         ip: this.ip,
         code: this.code,
+        nik: this.nik,
       })
     },
 
@@ -55,6 +57,7 @@
 
     init: function() {
       this.code = document.getElementById('codeInput').value
+      this.nik = document.getElementById('nikInput').value
       this.render()
 
       this.socket = io.connect(this.serverUrl)

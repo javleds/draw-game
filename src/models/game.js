@@ -17,12 +17,12 @@ class Game {
     this.parties = parties
   }
 
-  addPlayer(code, ip) {
+  addPlayer(code, ip, nik) {
     if (!this.parties.hasOwnProperty(code)) {
       this.parties[code] = new Party(code)
     }
 
-    this.parties[code].players[ip] = new Player(ip)
+    this.parties[code].players[ip] = new Player(ip, nik)
   }
 
   playersFor(code) {

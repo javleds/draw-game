@@ -28,12 +28,18 @@ app.get('/', function(req, res) {
 })
 
 app.get('/create', function(req, res) {
+  const nik = req.query.nik
+
+  if (!nik || nik.trim() === '') {
+    return res.redirect('/?error=emptyNik')
+  }
   const randomCode = Math.random().toString(36).substring(2, 7);
-  res.redirect('/game?code=' + randomCode)
+  res.redirect('/game?code=' + randomCode + '&nik=' + nik)
 })
 
 app.get('/game', function(req, res) {
   const code = req.query.code
+  const nik = req.query.nik
 
   if (!code || code.trim() === '') {
     return res.redirect('/?error=emptyCode')
@@ -43,19 +49,25 @@ app.get('/game', function(req, res) {
     return res.redirect('/?code=' + code + '&error=invalidCode')
   }
 
+  if (!nik || nik.trim() === '') {
+    return res.redirect('/?error=emptyNik')
+  }
+
   return res.render('game', {
-    code: code
+    code: code,
+    nik: nik,
   })
 })
 
 io.on('connection', (socket) => {
   socket.on('join', function(data) {
-    game.addPlayer(data.code, data.ip)
+    game.addPlayer(data.code, data.ip, data.nik)
     const emitData = {
       players: game.playersFor(data.code)
     }
     socket.emit('joinConfirmation', emitData)
     socket.broadcast.emit('addPlayer', emitData)
+    console.log('game', game)
   })
 })
 

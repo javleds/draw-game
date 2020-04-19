@@ -12,10 +12,17 @@ h1 Jugadores conectados: &nbsp;
 
 div#game
     form#wordForm
-        .group-input
-            label(for="word")
+        .for-group
+            label(for="word") Escríbe en una palabra:
+            input#word
 
-input(type="hidden" value=code id="codeInput")
+        .form-group
+            button(type="submit") Enviar
+
+    canvas#draw
+
+input#codeInput(type="hidden" value=code)
+input#nikInput(type="hidden" value=nik)
 
 script(src="/socket.io/socket.io.js")
 script(src="/js/game.js")

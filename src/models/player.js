@@ -1,6 +1,7 @@
 class Player {
-  constructor (ip) {
+  constructor (ip, nik) {
     this.ip = ip
+    this.nik = nik
   }
 }
 

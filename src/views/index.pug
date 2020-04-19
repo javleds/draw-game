@@ -6,6 +6,9 @@ head
     title Diviertete
 h1 Bienvenido!
 
+if error && error === 'emptyNik'
+    p El apodo no puede estar vacío.
+
 if error && error === 'emptyCode'
     p El código no puede estar vacío.
 
@@ -15,13 +18,24 @@ if error && error === 'invalidCode'
 p Si tienes el código de una partida ingresalo aqui:
 form(action="/game")
     .form-group
+        label(for="nikJoin") Apodo:
+        input(required type=text id="nikJoin" name="nik")
+
+    .form-group
         label(for="code") Código:
-        input(type=text id="code" name="code")
+        input(required type=text id="code" name="code")
 
     .form-group
         button(type="submit") Entrar
 
-p de lo contrario &nbsp;
-    a(href="/create") crea una partida.
+p De lo contrario, crea una partida
+
+form(action="/create")
+    .form-group
+        label(for="nikCreate") Apodo:
+        input(required type=text id="nikCreate" name="nik")
+
+    .form-group
+        button(type="submit") Crear
 
 script(src="/socket.io/socket.io.js")
