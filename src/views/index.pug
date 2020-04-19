@@ -5,6 +5,13 @@ head
     meta(http-equiv='X-UA-Compatible' content='ie=edge')
     title Diviertete
 h1 Bienvenido!
+
+if error && error === 'emptyCode'
+    p El código no puede estar vacío.
+
+if error && error === 'invalidCode'
+    p El código #{code} no existe.
+
 p Si tienes el código de una partida ingresalo aqui:
 form(action="/game")
     .form-group

@@ -15,8 +15,8 @@ app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'pug')
 
 app.get('/', function(req, res) {
-  const error = req.body.error
-  const code = req.body.code
+  const error = req.query.error
+  const code = req.query.code
 
   res.render('index', {
     error: error,
@@ -32,7 +32,11 @@ app.get('/create', function(req, res) {
 app.get('/game', function(req, res) {
   const code = req.query.code
 
-  if (!code || code.length !== 5) {
+  if (!code || code.trim() === '') {
+    return res.redirect('/?error=emptyCode')
+  }
+
+  if (!code || code.trim() === '') {
     return res.redirect('/?code=' + code + '&error=invalidCode')
   }
 
