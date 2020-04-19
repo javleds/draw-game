@@ -3,7 +3,19 @@ head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0')
     meta(http-equiv='X-UA-Compatible' content='ie=edge')
-    title Document
-h1 Hello world from pug
+    title Diviertete
+h1 Bienvenido!
+p Si tienes el código de una partida ingresalo aqui:
+form(href="/game")
+    .form-group
+        label(for="partyCode") Código:
+        input(type=text id="partyCode" name="party_code")
+
+    .form-group
+        button(type="submit") Entrar
+
+p de lo contrario &nbsp;
+    a(href="/create") crea una partida.
+
 script(src="/socket.io/socket.io.js")
 script(src="/js/main.js")
