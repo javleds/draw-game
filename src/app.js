@@ -4,12 +4,11 @@ const socketIo = require('socket.io')
 const path = require('path')
 const bodyParser = require('body-parser')
 
-const Game = require('./models/game')
+const gameController = require('./controllers/game-controller')
 
 const app = express()
 const server = http.Server(app)
 const io = socketIo(server)
-let game = null
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,52 +26,23 @@ app.get('/', function(req, res) {
   })
 })
 
-app.get('/create', function(req, res) {
-  const nik = req.query.nik
+app.get('/create', gameController.create)
 
-  if (!nik || nik.trim() === '') {
-    return res.redirect('/?error=emptyNik')
-  }
-  const randomCode = Math.random().toString(36).substring(2, 7);
-  res.redirect('/game?code=' + randomCode + '&nik=' + nik)
-})
-
-app.get('/game', function(req, res) {
-  const code = req.query.code
-  const nik = req.query.nik
-
-  if (!code || code.trim() === '') {
-    return res.redirect('/?error=emptyCode')
-  }
-
-  if (!code || code.trim() === '') {
-    return res.redirect('/?code=' + code + '&error=invalidCode')
-  }
-
-  if (!nik || nik.trim() === '') {
-    return res.redirect('/?error=emptyNik')
-  }
-
-  return res.render('game', {
-    code: code,
-    nik: nik,
-  })
-})
+app.get('/game', gameController.show)
 
 io.on('connection', function (socket) {
   socket.on('join', function(data) {
-    game.addPlayer(data.code, data.ip, data.nik)
+    gameController.game.addPlayer(data.code, data.ip, data.nik)
     const emitData = {
-      players: game.getPlayersFor(data.code),
-      totalPlayers: game.getTotalPlayersFor(data.code)
+      players: gameController.game.getPlayersFor(data.code),
+      totalPlayers: gameController.game.getTotalPlayersFor(data.code)
     }
     socket.emit('joinConfirmation', emitData)
     socket.broadcast.emit('addPlayer', emitData)
-    console.log('game', game)
+    console.log('game', gameController.game)
   })
 })
 
 server.listen(3000, function() {
-  game = new Game();
   console.log('Example app listening on port 3000')
 })
