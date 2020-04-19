@@ -32,7 +32,7 @@ app.get('/create', function(req, res) {
 app.get('/game', function(req, res) {
   const code = req.query.code
 
-  if (!code) {
+  if (!code || code.length !== 5) {
     return res.redirect('/?code=' + code + '&error=invalidCode')
   }
 
