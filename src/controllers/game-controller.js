@@ -1,4 +1,4 @@
-const Game = require('../models/game')
+import Game from '../models/game'
 
 class GameController {
   constructor () {
@@ -38,4 +38,4 @@ class GameController {
   }
 }
 
-module.exports = new GameController()
+export default new GameController()

@@ -1,11 +1,11 @@
-const express = require('express')
-const http = require('http')
-const socketIo = require('socket.io')
-const path = require('path')
-const bodyParser = require('body-parser')
+import express from 'express'
+import http from 'http'
+import socketIo from 'socket.io'
+import path from 'path'
+import bodyParser from 'body-parser'
 
-const homeController = require('./controllers/home-controller')
-const gameController = require('./controllers/game-controller')
+import homeController from './controllers/home-controller'
+import gameController from './controllers/game-controller'
 
 const app = express()
 const server = http.Server(app)
@@ -21,9 +21,9 @@ app.get('/', homeController.index)
 app.get('/create', gameController.create)
 app.get('/game', gameController.show)
 
-io.on('connection', function (socket) {
-  socket.on('join', function(data) {
-    socket.join(data.code, function () {
+io.on('connection', (socket) => {
+  socket.on('join', (data) => {
+    socket.join(data.code,  () => {
       gameController.game.addPlayer(data.code, data.ip, data.nik)
       const emitData = {
         players: gameController.game.getPlayersFor(data.code),
@@ -35,13 +35,13 @@ io.on('connection', function (socket) {
     })
   })
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', () => {
     // TODO: Fix next method
     // gameController.game.clean()
     // TODO: Leave channel if it is not exists anymore
   })
 })
 
-server.listen(3000, function() {
+server.listen(3000, () => {
   console.log('Example app listening on port 3000')
 })

@@ -1,5 +1,5 @@
-const Party = require('./party')
-const Player = require('./player')
+import Party from './party'
+import Player from './player'
 
 class Game {
   constructor () {
@@ -45,4 +45,4 @@ class Game {
   }
 }
 
-module.exports = Game
+export default Game
