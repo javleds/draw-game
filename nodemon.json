@@ -1,0 +1,6 @@
+{
+  "exec": "npm run dev",
+  "verbose": true,
+  "ignore": ["*.test.js", "fixtures/*"],
+  "watch": ["src/*", "public/*"]
+}
