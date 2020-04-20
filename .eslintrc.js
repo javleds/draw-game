@@ -15,5 +15,6 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
+    quotes: ["error", "single", { avoidEscape: true, allowTemplateLiterals: true }]
   }
 }

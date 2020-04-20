@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run prod",
     "build": "npm-run-all clean transpile",
-    "serve": "node dist/app.js",
+    "serve": "node dist/main.js",
     "dev": "NODE_ENV=development npm-run-all build serve",
     "prod": "NODE_ENV=production npm-run-all build serve",
     "transpile": "babel ./src --out-dir dist  --copy-files",

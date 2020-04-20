@@ -21,7 +21,7 @@ var Game = /*#__PURE__*/function () {
   function Game() {
     _classCallCheck(this, Game);
 
-    this.parties = [];
+    this.parties = {};
   }
 
   _createClass(Game, [{
@@ -72,5 +72,4 @@ var Game = /*#__PURE__*/function () {
   return Game;
 }();
 
-var _default = Game;
-exports["default"] = _default;
+exports["default"] = Game;

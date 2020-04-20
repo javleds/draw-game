@@ -14,5 +14,4 @@ var Player = function Player(ip, nik) {
   this.nik = nik;
 };
 
-var _default = Player;
-exports["default"] = _default;
+exports["default"] = Player;

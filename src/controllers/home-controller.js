@@ -1,13 +1,10 @@
-class HomeController {
-  index(req, res) {
-    const error = req.query.error
-    const code = req.query.code
+export default class HomeController {
+  index (req, res) {
+    const { error, code } = req.query
 
     return res.render('index', {
-      error: error,
-      code: code,
+      error,
+      code
     })
   }
 }
-
-export default new HomeController()

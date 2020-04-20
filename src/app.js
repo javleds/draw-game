@@ -1,47 +1,61 @@
 import express from 'express'
 import http from 'http'
 import socketIo from 'socket.io'
-import path from 'path'
-import bodyParser from 'body-parser'
 
-import homeController from './controllers/home-controller'
-import gameController from './controllers/game-controller'
+// Models
+import Game from './models/game'
 
-const app = express()
-const server = http.Server(app)
-const io = socketIo(server)
+// Middlewares
+import ValidateGameRequest from './middlewares/validate-game-request'
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.static('public'))
-app.set('views', path.join(__dirname, '/views'))
-app.set('view engine', 'pug')
+// Controllers
+import GameController from './controllers/game-controller'
+import HomeController from './controllers/home-controller'
 
-app.get('/', homeController.index)
-app.get('/create', gameController.create)
-app.get('/game', gameController.show)
+class App {
+  constructor () {
+    this.port = 3000
+    this.app = express()
+    this.server = http.Server(this.app)
+    this.io = socketIo(this.server)
 
-io.on('connection', (socket) => {
-  socket.on('join', (data) => {
-    socket.join(data.code, () => {
-      gameController.game.addPlayer(data.code, data.ip, data.nik)
-      const emitData = {
-        players: gameController.game.getPlayersFor(data.code),
-        totalPlayers: gameController.game.getTotalPlayersFor(data.code)
-      }
-      io.to(data.code).emit('joinConfirmation', emitData)
-      socket.broadcast.to(data.code).emit('addPlayer', emitData)
-      console.log('game', gameController.game)
+    this.instantiateMiddlewares()
+    this.instantiateModels()
+    this.instantiateControllers()
+  }
+
+  instantiateMiddlewares () {
+    this.middlewares = {
+      validateGameRequest: new ValidateGameRequest()
+    }
+  }
+
+  instantiateModels () {
+    this.models = {
+      game: new Game()
+    }
+  }
+
+  instantiateControllers () {
+    this.controllers = {
+      gameController: new GameController(),
+      homeController: new HomeController()
+    }
+  }
+
+  start (message = 'Example app listening on http://localhost:3000') {
+    this.server.listen(this.port, () => {
+      console.log(message)
     })
-  })
+  }
+}
 
-  socket.on('disconnect', () => {
-    // TODO: Fix next method
-    // gameController.game.clean()
-    // TODO: Leave channel if it is not exists anymore
-  })
-})
+const theApp = new App()
 
-server.listen(3000, () => {
-  console.log('Example app listening on port 3000')
-})
+export const app = theApp.app
+export const io = theApp.io
+export const models = theApp.models
+export const controllers = theApp.controllers
+export const middlewares = theApp.middlewares
+
+export default theApp

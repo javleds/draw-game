@@ -1,55 +1,90 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.middlewares = exports.controllers = exports.models = exports.io = exports.app = void 0;
+
 var _express = _interopRequireDefault(require("express"));
 
 var _http = _interopRequireDefault(require("http"));
 
 var _socket = _interopRequireDefault(require("socket.io"));
 
-var _path = _interopRequireDefault(require("path"));
+var _game = _interopRequireDefault(require("./models/game"));
 
-var _bodyParser = _interopRequireDefault(require("body-parser"));
-
-var _homeController = _interopRequireDefault(require("./controllers/home-controller"));
+var _validateGameRequest = _interopRequireDefault(require("./middlewares/validate-game-request"));
 
 var _gameController = _interopRequireDefault(require("./controllers/game-controller"));
 
+var _homeController = _interopRequireDefault(require("./controllers/home-controller"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var app = (0, _express["default"])();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var server = _http["default"].Server(app);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-var io = (0, _socket["default"])(server);
-app.use(_bodyParser["default"].json());
-app.use(_bodyParser["default"].urlencoded({
-  extended: true
-}));
-app.use(_express["default"]["static"]('public'));
-app.set('views', _path["default"].join(__dirname, '/views'));
-app.set('view engine', 'pug');
-app.get('/', _homeController["default"].index);
-app.get('/create', _gameController["default"].create);
-app.get('/game', _gameController["default"].show);
-io.on('connection', function (socket) {
-  socket.on('join', function (data) {
-    socket.join(data.code, function () {
-      _gameController["default"].game.addPlayer(data.code, data.ip, data.nik);
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-      var emitData = {
-        players: _gameController["default"].game.getPlayersFor(data.code),
-        totalPlayers: _gameController["default"].game.getTotalPlayersFor(data.code)
+var App = /*#__PURE__*/function () {
+  function App() {
+    _classCallCheck(this, App);
+
+    this.port = 3000;
+    this.app = (0, _express["default"])();
+    this.server = _http["default"].Server(this.app);
+    this.io = (0, _socket["default"])(this.server);
+    this.instantiateMiddlewares();
+    this.instantiateModels();
+    this.instantiateControllers();
+  }
+
+  _createClass(App, [{
+    key: "instantiateMiddlewares",
+    value: function instantiateMiddlewares() {
+      this.middlewares = {
+        validateGameRequest: new _validateGameRequest["default"]()
       };
-      io.to(data.code).emit('joinConfirmation', emitData);
-      socket.broadcast.to(data.code).emit('addPlayer', emitData);
-      console.log('game', _gameController["default"].game);
-    });
-  });
-  socket.on('disconnect', function () {// TODO: Fix next method
-    // gameController.game.clean()
-    // TODO: Leave channel if it is not exists anymore
-  });
-});
-server.listen(3000, function () {
-  console.log('Example app listening on port 3000');
-});
+    }
+  }, {
+    key: "instantiateModels",
+    value: function instantiateModels() {
+      this.models = {
+        game: new _game["default"]()
+      };
+    }
+  }, {
+    key: "instantiateControllers",
+    value: function instantiateControllers() {
+      this.controllers = {
+        gameController: new _gameController["default"](),
+        homeController: new _homeController["default"]()
+      };
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Example app listening on http://localhost:3000';
+      this.server.listen(this.port, function () {
+        console.log(message);
+      });
+    }
+  }]);
+
+  return App;
+}();
+
+var theApp = new App();
+var app = theApp.app;
+exports.app = app;
+var io = theApp.io;
+exports.io = io;
+var models = theApp.models;
+exports.models = models;
+var controllers = theApp.controllers;
+exports.controllers = controllers;
+var middlewares = theApp.middlewares;
+exports.middlewares = middlewares;
+var _default = theApp;
+exports["default"] = _default;

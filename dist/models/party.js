@@ -16,5 +16,4 @@ var Party = function Party(code) {
   this.players = players;
 };
 
-var _default = Party;
-exports["default"] = _default;
+exports["default"] = Party;

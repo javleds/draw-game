@@ -1,16 +1,16 @@
 import Party from './party'
 import Player from './player'
 
-class Game {
+export default class Game {
   constructor () {
-    this.parties = []
+    this.parties = {}
   }
 
   clean () {
     const vm = this
     const parties = {}
 
-    for (let i in vm.parties) {
+    for (const i in vm.parties) {
       const party = vm.parties[i]
       if (this.getTotalPlayersFor(party.code) > 0) {
         parties[party.code] = party
@@ -20,7 +20,7 @@ class Game {
     this.parties = parties
   }
 
-  addPlayer(code, ip, nik) {
+  addPlayer (code, ip, nik) {
     if (!this.parties.hasOwnProperty(code)) {
       this.parties[code] = new Party(code)
     }
@@ -28,21 +28,19 @@ class Game {
     this.parties[code].players[ip] = new Player(ip, nik)
   }
 
-  getTotalPlayersFor(code) {
+  getTotalPlayersFor (code) {
     if (!this.parties.hasOwnProperty(code)) {
-     return 0;
+      return 0
     }
 
     return Object.keys(this.parties[code].players).length
   }
 
-  getPlayersFor(code) {
+  getPlayersFor (code) {
     if (!this.parties.hasOwnProperty(code)) {
-      return {};
+      return {}
     }
 
     return this.parties[code].players
   }
 }
-
-export default Game

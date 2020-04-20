@@ -19,8 +19,9 @@ var HomeController = /*#__PURE__*/function () {
   _createClass(HomeController, [{
     key: "index",
     value: function index(req, res) {
-      var error = req.query.error;
-      var code = req.query.code;
+      var _req$query = req.query,
+          error = _req$query.error,
+          code = _req$query.code;
       return res.render('index', {
         error: error,
         code: code
@@ -31,6 +32,4 @@ var HomeController = /*#__PURE__*/function () {
   return HomeController;
 }();
 
-var _default = new HomeController();
-
-exports["default"] = _default;
+exports["default"] = HomeController;
