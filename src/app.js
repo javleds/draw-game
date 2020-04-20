@@ -11,10 +11,10 @@ const app = express()
 const server = http.Server(app)
 const io = socketIo(server)
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.set('views', path.join(__dirname, '/views'));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static('public'))
+app.set('views', path.join(__dirname, '/views'))
 app.set('view engine', 'pug')
 
 app.get('/', homeController.index)
@@ -23,7 +23,7 @@ app.get('/game', gameController.show)
 
 io.on('connection', (socket) => {
   socket.on('join', (data) => {
-    socket.join(data.code,  () => {
+    socket.join(data.code, () => {
       gameController.game.addPlayer(data.code, data.ip, data.nik)
       const emitData = {
         players: gameController.game.getPlayersFor(data.code),
